@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Bestiário | Mesa do Mestre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #f5f5f5;
+      --muted: #b1b1b1;
+      --paper: #000000;
+      --surface: #151515;
+      --line: #3b3b3b;
+      --green: #f5f5f5;
+      --green-dark: #d8d8d8;
+      --lime: #111111;
+      --red: #ff7777;
+      --red-pale: #421d1d;
+      --gold: #ffbf52;
+      --hp-color: #ff6268;
+      --shield-color: #62b8ff;
+      --corporeal-color: #ffc15c;
+      --natural-color: #ffffff;
+      --supernatural-color: #c78aff;
+      --font-body: 'DM Sans', sans-serif;
+      --font-display: 'DM Serif Display', Georgia, serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 15px;
+    }
+
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .shell {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 30px 0 64px;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--lime);
+      font-size: 18px;
+    }
+
+    .table-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      align-items: stretch;
+      gap: 28px;
+      margin-bottom: 30px;
+    }
+
+    .intro-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 176px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 54px;
+      font-weight: 400;
+      line-height: 1.04;
+    }
+
+    .intro-copy > p:last-child {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .scene {
+      position: relative;
+      min-height: 176px;
+      overflow: hidden;
+      border-radius: 5px;
+      background: #111111;
+    }
+
+    .scene img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 176px;
+      object-fit: cover;
+      filter: saturate(.75);
+    }
+
+    .scene::after {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgb(18 35 28 / 15%), rgb(18 35 28 / 4%));
+      content: '';
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 330px;
+      align-items: start;
+      gap: 28px;
+    }
+
+    .list-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 14px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .count {
+      display: inline-flex;
+      min-width: 27px;
+      height: 27px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 6px;
+      border-radius: 50%;
+      background: #262626;
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .search-wrap { position: relative; }
+
+    .search-wrap::before {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      color: var(--muted);
+      content: '⌕';
+      font-size: 20px;
+      transform: translateY(-55%);
+    }
+
+    .search {
+      width: 190px;
+      height: 38px;
+      padding: 0 12px 0 34px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .search:focus, .field input:focus {
+      border-color: #555555;
+      box-shadow: 0 0 0 3px rgb(255 255 255 / 12%);
+    }
+
+    .creature-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .creature {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: var(--surface);
+      animation: arrive .24s ease-out both;
+    }
+
+    .creature-top, .creature-bottom, .hp-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .creature-name {
+      overflow-wrap: anywhere;
+      font-family: var(--font-display);
+      font-size: 21px;
+      line-height: 1.15;
+    }
+
+    .alive-tag {
+      flex: 0 0 auto;
+      padding: 5px 8px;
+      border-radius: 3px;
+      background: #262626;
+      color: var(--ink);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .creature.is-down .alive-tag {
+      background: var(--red-pale);
+      color: var(--red);
+    }
+
+    .hp-line { margin: 14px 0 9px; }
+
+    .hp-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .hp-value {
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hp-value strong { font-size: 19px; }
+
+    .meter {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #454545;
+    }
+
+    .meter-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--hp-color);
+      transition: width .2s ease, background-color .2s ease;
+    }
+
+    .hp-value strong { color: var(--hp-color); }
+
+    .resource-counters {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .resource-counter {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #202020;
+    }
+
+    .resource-name {
+      overflow-wrap: anywhere;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .resource-counter.shield .resource-value { color: var(--shield-color); }
+    .resource-counter.corporeal .resource-value { color: var(--corporeal-color); }
+    .resource-counter.natural .resource-value {
+      display: table;
+      padding: 1px 0;
+      background: transparent;
+      color: var(--natural-color);
+    }
+    .resource-counter.sobrenatural .resource-value { color: var(--supernatural-color); }
+
+    .resource-value {
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .resource-actions { display: flex; gap: 4px; }
+
+    .resource-button {
+      width: 32px;
+      height: 29px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #202020;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .resource-button:hover { border-color: #bdbdbd; background: #303030; }
+    .resource-button:disabled { cursor: not-allowed; opacity: .42; }
+
+    .hp-damage-form {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .hp-damage-input {
+      width: 88px;
+      height: 34px;
+      padding: 0 8px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #111111;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hp-damage-input:focus {
+      border-color: #bdbdbd;
+      outline: 2px solid rgb(255 255 255 / 12%);
+    }
+
+    .action-button, .delete-button {
+      min-height: 32px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #202020;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background-color .15s ease, border-color .15s ease;
+    }
+
+    .action-button:hover { border-color: #bdbdbd; background: #303030; }
+    .action-button:disabled { cursor: not-allowed; opacity: .42; }
+
+    .delete-button {
+      min-width: 32px;
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 17px;
+      font-weight: 400;
+    }
+
+    .delete-button:hover { border-color: #8b4545; background: var(--red-pale); color: var(--red); }
+
+    .empty-state {
+      padding: 42px 20px;
+      border: 1px dashed #555555;
+      border-radius: 5px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-family: var(--font-display);
+      font-size: 21px;
+      font-weight: 400;
+    }
+
+    .form-panel {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--green);
+      border-radius: 5px;
+      background: var(--surface);
+    }
+
+    .form-panel h2 { margin-bottom: 5px; }
+
+    .form-intro {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field { display: block; margin-bottom: 14px; }
+
+    .field span {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .field input {
+      width: 100%;
+      height: 42px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: #111111;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .add-button {
+      display: flex;
+      width: 100%;
+      min-height: 43px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 0;
+      border-radius: 3px;
+      background: #f5f5f5;
+      color: #111111;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background-color .15s ease, transform .15s ease;
+    }
+
+    .add-button:hover { background: #d8d8d8; }
+    .add-button:active { transform: translateY(1px); }
+    .add-button span { color: var(--lime); font-size: 20px; line-height: 1; }
+
+    .storage-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .storage-note span { color: var(--green); }
+
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 32px, 560px); padding-top: 20px; }
+      .intro { grid-template-columns: minmax(0, 1fr) 180px; gap: 16px; }
+      .intro-copy { min-height: 150px; }
+      .scene, .scene img { min-height: 150px; }
+      .content-grid { grid-template-columns: 1fr; gap: 20px; }
+      .form-panel { grid-row: 1; }
+      .creature-section { grid-row: 2; }
+    }
+
+    @media (max-width: 480px) {
+      .shell { width: calc(100% - 28px); }
+      .topline { margin-bottom: 21px; }
+      .table-label { font-size: 11px; }
+      .intro { grid-template-columns: 1fr; gap: 14px; margin-bottom: 20px; }
+      .intro-copy { min-height: auto; }
+      h1 { font-size: 42px; }
+      .scene, .scene img { min-height: 112px; height: 112px; }
+      .list-heading { align-items: flex-start; flex-direction: column; }
+      .search-wrap, .search { width: 100%; }
+      .creature { padding: 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topline">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">♜</span> Apenas para o neto, seus insetos.</div>
+    </div>
+
+    <header class="intro">
+      <div class="intro-copy">
+    
+        <h1>Entre Nós: Temporada 2</h1>
+      </div>
+    </header>
+
+    <div class="content-grid">
+      <section class="creature-section" aria-labelledby="creature-heading">
+        <div class="list-heading">
+          <h2 id="creature-heading">Criaturas<span class="count" id="creature-count">0</span></h2>
+          <label class="search-wrap">
+            <span hidden>Buscar Larper</span>
+            <input class="search" id="search" type="search" aria-label="Buscar criatura" placeholder="Buscar Inseto" autocomplete="off">
+          </label>
+        </div>
+        <div class="creature-list" id="creature-list" aria-live="polite"></div>
+      </section>
+
+      <aside class="form-panel" aria-labelledby="form-heading">
+        <h2 id="form-heading">Personagem</h2>
+        <p class="form-intro">Adicione algum Feto seu aqui.</p>
+        <form id="creature-form">
+          <label class="field">
+            <span>Nome</span>
+            <input id="name" name="name" type="text" maxlength="60" placeholder="Ex.: Xeper! e a gasolina? e o baro?" required>
+          </label>
+          <label class="field">
+            <span>Pontos de vida</span>
+            <input id="max-hp" name="maxHp" type="number" min="1" max="99999" placeholder="Ex.: 24 (larp)" required>
+          </label>
+          <label class="field">
+            <span>Pontos de escudo</span>
+            <input id="max-shield" name="maxShield" type="number" min="1" max="99999" placeholder="Ex.: 24 (larp)" required>
+          </label>
+          <label class="field">
+            <span>Energia Corporal</span>
+            <input id="max-corporeal" name="maxCorporeal" type="number" min="1" max="99999" placeholder="Ex.: 24 (larp)" required>
+          </label>
+          <label class="field">
+            <span>Energia Natural</span>
+            <input id="max-natural" name="maxNatural" type="number" min="1" max="99999" placeholder="Ex.: 24 (larp)" required>
+          </label>
+          <label class="field">
+            <span>Energia Sobrenatural</span>
+            <input id="max-sobrenatural" name="maxSobrenatural" type="number" min="1" max="99999" placeholder="Ex.: 24 (larp)" required>
+          </label>
+          <button class="add-button" type="submit"><span aria-hidden="true">+</span>Adicionar Verme</button>
+        </form>
+        <p class="storage-note"><span aria-hidden="true">●</span> Tudo aqui fica salvo.</p>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = 'mesa-do-mestre-criaturas';
+    const RESOURCES = [
+      { key: 'shield', maxKey: 'maxShield', label: 'Escudo', colorClass: 'shield' },
+      { key: 'corporeal', maxKey: 'maxCorporeal', label: 'Energia Corporal', colorClass: 'corporeal' },
+      { key: 'natural', maxKey: 'maxNatural', label: 'Energia Natural', colorClass: 'natural' },
+      { key: 'sobrenatural', maxKey: 'maxSobrenatural', label: 'Energia Sobrenatural', colorClass: 'sobrenatural' }
+    ];
+    const form = document.querySelector('#creature-form');
+    const nameInput = document.querySelector('#name');
+    const hpInput = document.querySelector('#max-hp');
+    const shieldInput = document.querySelector('#max-shield');
+    const corporealInput = document.querySelector('#max-corporeal');
+    const naturalInput = document.querySelector('#max-natural');
+    const sobrenaturalInput = document.querySelector('#max-sobrenatural');
+    const searchInput = document.querySelector('#search');
+    const creatureList = document.querySelector('#creature-list');
+    const creatureCount = document.querySelector('#creature-count');
+
+    function loadCreatures() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return Array.isArray(saved) ? saved.filter((creature) =>
+          creature && typeof creature.id === 'string' && typeof creature.name === 'string' &&
+          Number.isFinite(creature.hp) && Number.isFinite(creature.maxHp) && creature.maxHp > 0
+        ).map((creature) => ({
+          ...creature,
+          ...Object.fromEntries(RESOURCES.map(({ key, maxKey }) => {
+            const max = Number.isInteger(creature[maxKey]) && creature[maxKey] >= 0 ? creature[maxKey] : null;
+            const current = Number.isInteger(creature[key]) && creature[key] >= 0 ? creature[key] : 0;
+            return [key, max === null ? current : Math.min(current, max)];
+          })),
+          ...Object.fromEntries(RESOURCES.map(({ maxKey }) => [
+            maxKey,
+            Number.isInteger(creature[maxKey]) && creature[maxKey] >= 0 ? creature[maxKey] : null
+          ]))
+        })) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    let creatures = loadCreatures();
+
+    function saveCreatures() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(creatures));
+    }
+
+    function makeButton(label, className, action, disabled = false) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = className;
+      button.textContent = label;
+      button.disabled = disabled;
+      button.addEventListener('click', action);
+      return button;
+    }
+
+    function render() {
+      const query = searchInput.value.trim().toLocaleLowerCase('pt-BR');
+      const visibleCreatures = creatures.filter((creature) => creature.name.toLocaleLowerCase('pt-BR').includes(query));
+      creatureCount.textContent = String(creatures.length);
+      creatureList.replaceChildren();
+
+      if (visibleCreatures.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-state';
+        const title = document.createElement('strong');
+        title.textContent = query ? 'Nenhum resultado' : 'O encontro está aberto';
+        const message = document.createElement('span');
+        message.textContent = query ? 'Tente buscar por outro nome.' : 'Adicione a primeira criatura para começar.';
+        empty.append(title, message);
+        creatureList.append(empty);
+        return;
+      }
+
+      for (const creature of visibleCreatures) {
+        const card = document.createElement('article');
+        const isDown = creature.hp === 0;
+        const ratio = Math.max(0, Math.min(100, (creature.hp / creature.maxHp) * 100));
+        card.className = `creature${isDown ? ' is-down' : ''}`;
+
+        const top = document.createElement('div');
+        top.className = 'creature-top';
+        const title = document.createElement('div');
+        title.className = 'creature-name';
+        title.textContent = creature.name;
+        const status = document.createElement('span');
+        status.className = 'alive-tag';
+        status.textContent = isDown ? 'Morto: Você é um lixo' : 'Vivo';
+        top.append(title, status);
+
+        const hpLine = document.createElement('div');
+        hpLine.className = 'hp-line';
+        const hpLabel = document.createElement('span');
+        hpLabel.className = 'hp-label';
+        hpLabel.textContent = 'Pontos de vida';
+        const hpValue = document.createElement('span');
+        hpValue.className = 'hp-value';
+        const current = document.createElement('strong');
+        current.textContent = String(creature.hp);
+        hpValue.append(current, document.createTextNode(` / ${creature.maxHp}`));
+        hpLine.append(hpLabel, hpValue);
+
+        const meter = document.createElement('div');
+        meter.className = 'meter';
+        meter.setAttribute('role', 'progressbar');
+        meter.setAttribute('aria-label', `Vida de ${creature.name}`);
+        meter.setAttribute('aria-valuemin', '0');
+        meter.setAttribute('aria-valuemax', String(creature.maxHp));
+        meter.setAttribute('aria-valuenow', String(creature.hp));
+        const fill = document.createElement('div');
+        fill.className = `meter-fill${ratio <= 25 ? ' critical' : ratio <= 50 ? ' low' : ''}`;
+        fill.style.width = `${ratio}%`;
+        meter.append(fill);
+
+        const resourceCounters = document.createElement('div');
+        resourceCounters.className = 'resource-counters';
+        for (const resource of RESOURCES) {
+          const current = creature[resource.key] ?? 0;
+          const max = creature[resource.maxKey];
+          const counter = document.createElement('div');
+          counter.className = `resource-counter ${resource.colorClass}`;
+          const description = document.createElement('div');
+          const label = document.createElement('div');
+          label.className = 'resource-name';
+          label.textContent = resource.label;
+          const value = document.createElement('div');
+          value.className = 'resource-value';
+          value.textContent = max === null || max === undefined ? String(current) : `${current} / ${max}`;
+          description.append(label, value);
+          const resourceActions = document.createElement('div');
+          resourceActions.className = 'resource-actions';
+          const decreaseFive = makeButton('−5', 'resource-button', () => updateResource(creature.id, resource, -5), current === 0);
+          decreaseFive.setAttribute('aria-label', `Diminuir ${resource.label} em 5 para ${creature.name}`);
+          const decreaseOne = makeButton('−1', 'resource-button', () => updateResource(creature.id, resource, -1), current === 0);
+          decreaseOne.setAttribute('aria-label', `Diminuir ${resource.label} em 1 para ${creature.name}`);
+          const increaseOne = makeButton('+1', 'resource-button', () => updateResource(creature.id, resource, 1), max !== null && max !== undefined && current >= max);
+          increaseOne.setAttribute('aria-label', `Aumentar ${resource.label} em 1 para ${creature.name}`);
+          const increaseFive = makeButton('+5', 'resource-button', () => updateResource(creature.id, resource, 5), max !== null && max !== undefined && current >= max);
+          increaseFive.setAttribute('aria-label', `Aumentar ${resource.label} em 5 para ${creature.name}`);
+          resourceActions.append(decreaseFive, decreaseOne, increaseOne, increaseFive);
+          counter.append(description, resourceActions);
+          resourceCounters.append(counter);
+        }
+
+        const damageForm = document.createElement('form');
+        damageForm.className = 'hp-damage-form';
+        const damageInput = document.createElement('input');
+        damageInput.className = 'hp-damage-input';
+        damageInput.type = 'number';
+        damageInput.min = '1';
+        damageInput.max = '99999';
+        damageInput.step = '1';
+        damageInput.placeholder = 'Dano';
+        damageInput.setAttribute('aria-label', `Dano recebido por ${creature.name}`);
+        damageInput.required = true;
+        const applyDamage = document.createElement('button');
+        applyDamage.className = 'action-button';
+        applyDamage.type = 'submit';
+        applyDamage.textContent = 'Aplicar dano';
+        damageForm.append(damageInput, applyDamage);
+        damageForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const damage = Number(damageInput.value);
+          if (!Number.isInteger(damage) || damage < 1 || damage > 99999) return;
+          updateHp(creature.id, -damage);
+        });
+
+        const bottom = document.createElement('div');
+        bottom.className = 'creature-bottom';
+        const remove = makeButton('×', 'delete-button', () => removeCreature(creature.id));
+        remove.setAttribute('aria-label', `Remover ${creature.name}`);
+        remove.title = 'Remover criatura';
+        bottom.append(remove);
+
+        card.append(top, hpLine, meter, resourceCounters, damageForm, bottom);
+        creatureList.append(card);
+      }
+    }
+
+    function updateHp(id, amount) {
+      creatures = creatures.map((creature) => creature.id === id
+        ? { ...creature, hp: Math.max(0, Math.min(creature.maxHp, creature.hp + amount)) }
+        : creature
+      );
+      saveCreatures();
+      render();
+    }
+
+    function updateResource(id, resource, amount) {
+      creatures = creatures.map((creature) => {
+        if (creature.id !== id) return creature;
+        const current = creature[resource.key] ?? 0;
+        const max = creature[resource.maxKey];
+        const next = Math.max(0, current + amount);
+        return {
+          ...creature,
+          [resource.key]: max === null || max === undefined ? next : Math.min(max, next)
+        };
+      });
+      saveCreatures();
+      render();
+    }
+
+    function removeCreature(id) {
+      creatures = creatures.filter((creature) => creature.id !== id);
+      saveCreatures();
+      render();
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const name = nameInput.value.trim();
+      const maxHp = Number(hpInput.value);
+      const resourceMaximums = RESOURCES.map(({ maxKey }) => Number(form.elements[maxKey].value));
+      if (!name || !Number.isInteger(maxHp) || maxHp < 1 || maxHp > 99999 ||
+        resourceMaximums.some((maximum) => !Number.isInteger(maximum) || maximum < 1 || maximum > 99999)) return;
+
+      const creature = {
+        id: globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        name,
+        hp: maxHp,
+        maxHp
+      };
+      RESOURCES.forEach(({ key, maxKey }, index) => {
+        creature[key] = resourceMaximums[index];
+        creature[maxKey] = resourceMaximums[index];
+      });
+      creatures.unshift(creature);
+      saveCreatures();
+      form.reset();
+      searchInput.value = '';
+      render();
+      nameInput.focus();
+    });
+
+    searchInput.addEventListener('input', render);
+    render();
+  </script>
+</body>
+</html>
